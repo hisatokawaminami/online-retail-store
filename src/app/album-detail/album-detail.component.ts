@@ -14,7 +14,7 @@ import { FirebaseObjectObservable } from 'angularfire2/database';
 })
 export class AlbumDetailComponent implements OnInit {
   albumId: string;
-  albumToDisplay;
+  albumToDisplay: Album;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,12 +22,29 @@ export class AlbumDetailComponent implements OnInit {
   private albumService: AlbumService
 ) { }
 
+  // ngOnInit() {
+  //   this.route.params.forEach((urlParameters) => {
+  //     this.albumId = urlParameters['id'];
+  //   });
+  //   this.albumToDisplay = this.albumService.getAlbumById(this.albumId);
+  //   console.log(this.albumToDisplay);
+  //
+  // }
   ngOnInit() {
-    this.route.params.forEach((urlParameters) => {
-      this.albumId = urlParameters['id'];
-    });
-    this.albumToDisplay = this.albumService.getAlbumById(this.albumId);
-  }
+    this.route.params.forEach((urlParametersArray) => {
+     this.albumId = urlParametersArray['id'];
+   });
+   this.albumService.getAlbumById(this.albumId).subscribe(dataLastEmittedFromObserver => {
+     this.albumToDisplay = new Album(
+       dataLastEmittedFromObserver.title,
+       dataLastEmittedFromObserver.artist,
+       dataLastEmittedFromObserver.description)
+    //  this.albumToDisplay = dataLastEmittedFromObserver;
+
+     console.log(this.albumToDisplay);
+   })
+ }
+
   //no good
   // newThis = this;
   // ngOnInit() {
